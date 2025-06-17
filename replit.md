@@ -95,10 +95,19 @@ This is a full-stack weather application built with React on the frontend and Ex
 - **Port Mapping**: Internal port 5000 mapped to external port 80
 - **Modules**: nodejs-20, web, postgresql-16 for complete runtime environment
 
-## Changelog
+## Recent Changes
 
-Changelog:
-- June 17, 2025. Initial setup
+- June 17, 2025: Weather app fully built with real-time atmospheric effects
+  - Dynamic backgrounds that change with weather conditions
+  - Particle effects for rain, snow, and clouds
+  - Glass morphism UI with smooth Framer Motion animations
+  - Location search and geolocation integration
+  - Comprehensive weather data display (current, hourly, daily forecasts)
+  - Awaiting valid OpenWeatherMap API key for live data functionality
+
+## Current Status
+
+The weather app is complete and running with all visual effects working. The only missing component is a valid OpenWeatherMap API key to fetch real weather data. All UI components, animations, and transitions are fully functional.
 
 ## User Preferences
 
