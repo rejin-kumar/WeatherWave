@@ -16,7 +16,8 @@ export default function WeatherPage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [units, setUnits] = useState<'metric' | 'imperial'>('metric');
-  const { location, error: locationError } = useGeolocation();
+  const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
+  const { location, error: locationError, loading: locationLoading } = useGeolocation();
   const { toast } = useToast();
 
   // Use selected location or user's current location
@@ -31,24 +32,25 @@ export default function WeatherPage() {
   } = useWeather(coords?.lat, coords?.lon);
 
   useEffect(() => {
-    if (locationError) {
+    if (locationError && !hasRequestedLocation) {
+      setHasRequestedLocation(true);
       toast({
-        title: "Location Error",
-        description: "Unable to get your location. Please search for a city manually.",
-        variant: "destructive",
+        title: "Location Access",
+        description: "Please allow location access or search for a city manually.",
+        variant: "default",
       });
     }
-  }, [locationError, toast]);
+  }, [locationError, hasRequestedLocation, toast]);
 
   useEffect(() => {
-    if (error) {
+    if (error && coords) {
       toast({
         title: "Weather Error",
         description: "Unable to fetch weather data. Please try again.",
         variant: "destructive",
       });
     }
-  }, [error, toast]);
+  }, [error, coords, toast]);
 
   const getWeatherGradient = (condition?: string) => {
     if (!condition) return "sunny-gradient";
@@ -220,6 +222,30 @@ export default function WeatherPage() {
                     units={units}
                   />
                 </motion.div>
+              ) : !coords ? (
+                <motion.div
+                  key="no-location"
+                  className="glass-card rounded-3xl p-8 text-center"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <div className="mb-6">
+                    <Search className="w-16 h-16 text-white/60 mx-auto mb-4" />
+                    <h2 className="text-xl font-semibold text-white mb-2">Welcome to Weather App</h2>
+                    <p className="text-white/70 mb-6">
+                      {locationError 
+                        ? "Location access was denied. Search for any city to get started!" 
+                        : "Loading your location..."}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setIsSearchOpen(true)}
+                    className="bg-white/20 hover:bg-white/30 text-white px-8 py-3"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Search for a city
+                  </Button>
+                </motion.div>
               ) : (
                 <motion.div
                   key="error"
@@ -228,12 +254,22 @@ export default function WeatherPage() {
                   animate={{ opacity: 1, scale: 1 }}
                 >
                   <p className="text-white/80 mb-4">Unable to load weather data</p>
-                  <Button
-                    onClick={() => setIsSearchOpen(true)}
-                    className="bg-white/20 hover:bg-white/30 text-white"
-                  >
-                    Search for a location
-                  </Button>
+                  <div className="space-y-3">
+                    <Button
+                      onClick={handleRefresh}
+                      className="bg-white/20 hover:bg-white/30 text-white mr-3"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Try Again
+                    </Button>
+                    <Button
+                      onClick={() => setIsSearchOpen(true)}
+                      className="bg-white/20 hover:bg-white/30 text-white"
+                    >
+                      <Search className="w-4 h-4 mr-2" />
+                      Search Different Location
+                    </Button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

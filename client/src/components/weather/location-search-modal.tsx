@@ -28,6 +28,13 @@ export default function LocationSearchModal({ isOpen, onClose, onLocationSelect 
 
   const { data: locations, isLoading } = useQuery({
     queryKey: ["/api/weather/search", searchTerm],
+    queryFn: async () => {
+      const response = await fetch(`/api/weather/search?q=${encodeURIComponent(searchTerm)}`);
+      if (!response.ok) {
+        throw new Error('Failed to search locations');
+      }
+      return response.json();
+    },
     enabled: searchTerm.length > 2,
   });
 
