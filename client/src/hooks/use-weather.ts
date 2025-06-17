@@ -4,12 +4,26 @@ import type { CurrentWeather, WeatherForecast } from "@shared/schema";
 export function useWeather(lat?: number, lon?: number) {
   const currentWeatherQuery = useQuery({
     queryKey: ["/api/weather/current", lat, lon],
+    queryFn: async () => {
+      const response = await fetch(`/api/weather/current?lat=${lat}&lon=${lon}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch current weather');
+      }
+      return response.json();
+    },
     enabled: !!lat && !!lon,
     refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
   });
 
   const forecastQuery = useQuery({
     queryKey: ["/api/weather/forecast", lat, lon],
+    queryFn: async () => {
+      const response = await fetch(`/api/weather/forecast?lat=${lat}&lon=${lon}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather forecast');
+      }
+      return response.json();
+    },
     enabled: !!lat && !!lon,
     refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
   });
