@@ -16,6 +16,12 @@ export async function apiRequest(
   data?: unknown | undefined,
 ): Promise<Response> {
   const fullUrl = `${API_BASE_URL}${url}`;
+  
+  // Debug logging - let's see what's happening
+  console.log('🔍 DEBUG - API_BASE_URL:', API_BASE_URL);
+  console.log('🔍 DEBUG - Full URL:', fullUrl);
+  console.log('🔍 DEBUG - Environment check:', import.meta.env);
+  
   const res = await fetch(fullUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
