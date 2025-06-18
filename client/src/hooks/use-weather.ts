@@ -1,14 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import type { CurrentWeather, WeatherForecast } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 
 export function useWeather(lat?: number, lon?: number) {
   const currentWeatherQuery = useQuery({
     queryKey: ["/api/weather/current", lat, lon],
     queryFn: async () => {
-      const response = await fetch(`/api/weather/current?lat=${lat}&lon=${lon}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch current weather');
-      }
+      const response = await apiRequest("GET", `/api/weather/current?lat=${lat}&lon=${lon}`);
       return response.json();
     },
     enabled: !!lat && !!lon,
@@ -18,10 +16,7 @@ export function useWeather(lat?: number, lon?: number) {
   const forecastQuery = useQuery({
     queryKey: ["/api/weather/forecast", lat, lon],
     queryFn: async () => {
-      const response = await fetch(`/api/weather/forecast?lat=${lat}&lon=${lon}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch weather forecast');
-      }
+      const response = await apiRequest("GET", `/api/weather/forecast?lat=${lat}&lon=${lon}`);
       return response.json();
     },
     enabled: !!lat && !!lon,

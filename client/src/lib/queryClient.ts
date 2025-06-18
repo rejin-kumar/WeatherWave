@@ -1,7 +1,7 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-// TEMPORARY: Hardcode for testing - we'll fix this after debugging
-const API_BASE_URL = 'https://weatherwave-a6qq.onrender.com';
+// Get API base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 // This should ALWAYS show up in console
 console.log('🚀 WEATHER APP LOADED - This should always appear!');
