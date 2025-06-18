@@ -129,7 +129,7 @@ export default function WeatherPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-md mx-auto">
+          <div className="max-w-md lg:max-w-7xl mx-auto">
             <div className="glass-card rounded-2xl p-4 mb-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -172,7 +172,7 @@ export default function WeatherPage() {
 
         {/* Main Weather Display */}
         <main className="relative z-10 flex-1 px-6 pb-6">
-          <div className="max-w-md mx-auto space-y-6">
+          <div className="max-w-md lg:max-w-7xl mx-auto space-y-6 lg:space-y-8">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <motion.div
@@ -191,36 +191,54 @@ export default function WeatherPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="space-y-6"
+                  className="space-y-6 lg:space-y-0"
                 >
-                  {/* Current Weather Card */}
-                  <CurrentWeatherCard 
-                    weather={currentWeather} 
-                    units={units}
-                    convertTemp={convertTemp}
-                  />
+                  {/* Desktop Grid Layout */}
+                  <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:h-full">
+                    {/* Left Column - Current Weather (spans 2 rows on desktop) */}
+                    <div className="lg:col-span-1 lg:row-span-2 space-y-6">
+                      <CurrentWeatherCard 
+                        weather={currentWeather} 
+                        units={units}
+                        convertTemp={convertTemp}
+                      />
+                      
+                      {/* Weather Details Grid - moved to left column */}
+                      <div className="lg:block">
+                        <WeatherDetailsGrid 
+                          weather={currentWeather} 
+                          units={units}
+                        />
+                      </div>
+                    </div>
 
-                  {/* Hourly Forecast */}
-                  {forecast?.hourly && (
-                    <HourlyForecast 
-                      hourlyData={forecast.hourly} 
-                      convertTemp={convertTemp}
+                    {/* Right Column - Forecasts */}
+                    <div className="lg:col-span-2 space-y-6 lg:space-y-6">
+                      {/* Hourly Forecast */}
+                      {forecast?.hourly && (
+                        <HourlyForecast 
+                          hourlyData={forecast.hourly} 
+                          convertTemp={convertTemp}
+                        />
+                      )}
+
+                      {/* Weekly Forecast */}
+                      {forecast?.daily && (
+                        <WeeklyForecast 
+                          dailyData={forecast.daily} 
+                          convertTemp={convertTemp}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Mobile Layout - Weather Details (hidden on desktop) */}
+                  <div className="lg:hidden">
+                    <WeatherDetailsGrid 
+                      weather={currentWeather} 
+                      units={units}
                     />
-                  )}
-
-                  {/* Weekly Forecast */}
-                  {forecast?.daily && (
-                    <WeeklyForecast 
-                      dailyData={forecast.daily} 
-                      convertTemp={convertTemp}
-                    />
-                  )}
-
-                  {/* Weather Details Grid */}
-                  <WeatherDetailsGrid 
-                    weather={currentWeather} 
-                    units={units}
-                  />
+                  </div>
                 </motion.div>
               ) : !coords ? (
                 <motion.div
