@@ -10,8 +10,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'http://localhost:5173', // Local development
     'http://localhost:3000', // Alternative local port
     'https://weatherwave-a6qq.onrender.com', // Your Render server (for self-reference)
-    // Add your Vercel domain here when you get it
-    // 'https://your-vercel-app.vercel.app'
+    'https://weather-wave-neon.vercel.app' // Your Vercel app
   ];
   
   const origin = req.headers.origin;
